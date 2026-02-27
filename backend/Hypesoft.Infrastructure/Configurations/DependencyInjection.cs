@@ -1,8 +1,11 @@
 using Hypesoft.Infrastructure.Configurations;
+using Hypesoft.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using MongoDB.Driver;
+using Hypesoft.Domain.Repositories;
+using Hypesoft.Infrastructure.Repositories;
 
 namespace Hypesoft.Infrastructure;
 
@@ -12,24 +15,20 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        // 1) Bind do appsettings -> MongoDbSettings
+        // Bind Mongo settings
         services.Configure<MongoDbSettings>(
             configuration.GetSection("MongoDbSettings"));
 
-        // 2) MongoClient (singleton)
-        services.AddSingleton<IMongoClient>(sp =>
+        // Register DbContext using EF Core Mongo Provider
+        services.AddDbContext<HypesoftDbContext>((sp, options) =>
         {
             var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
-            return new MongoClient(settings.ConnectionString);
-        });
 
-        // 3) IMongoDatabase (singleton)
-        services.AddSingleton<IMongoDatabase>(sp =>
-        {
-            var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
-            var client = sp.GetRequiredService<IMongoClient>();
-            return client.GetDatabase(settings.DatabaseName);
+            options.UseMongoDB(
+                settings.ConnectionString,
+                settings.DatabaseName);
         });
+        services.AddScoped<IProductRepository, ProductRepository>();
 
         return services;
     }
