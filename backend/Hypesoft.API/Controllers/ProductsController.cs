@@ -37,4 +37,15 @@ public class ProductsController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(string id, CancellationToken ct)
+    {
+        var result = await _mediator.Send(new GetProductByIdQuery(id), ct);
+
+        if (result is null)
+            return NotFound();
+
+        return Ok(result);
+    }
 }
