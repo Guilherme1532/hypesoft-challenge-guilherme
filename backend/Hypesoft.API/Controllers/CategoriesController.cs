@@ -2,6 +2,7 @@ using Hypesoft.Application.Commands.Categories;
 using Hypesoft.Application.Queries.Categories;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi;
 
 namespace Hypesoft.API.Controllers;
 
@@ -37,5 +38,15 @@ public class CategoriesController : ControllerBase
             return NotFound();
         }
         return Ok(result);
+    }
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(string id, [FromBody] UpdateCategoryCommand body, CancellationToken ct)
+    {
+        var ok = await _mediator.Send(body with { Id = id }, ct);
+        if (!ok)
+        {
+            return NotFound();
+        }
+        return Ok();
     }
 }
