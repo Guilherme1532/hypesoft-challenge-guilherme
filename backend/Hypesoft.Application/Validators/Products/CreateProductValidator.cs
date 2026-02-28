@@ -1,7 +1,7 @@
 using FluentValidation;
-using Hypesoft.Application.Commands;
+using Hypesoft.Application.Commands.Products;
 
-namespace Hypesoft.Application.Validators;
+namespace Hypesoft.Application.Validators.Products;
 
 public class CreateProductValidator : AbstractValidator<CreateProductCommand>
 {

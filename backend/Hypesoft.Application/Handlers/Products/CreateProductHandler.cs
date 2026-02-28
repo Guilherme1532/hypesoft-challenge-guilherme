@@ -1,10 +1,10 @@
 using MediatR;
-using Hypesoft.Application.Commands;
+using Hypesoft.Application.Commands.Products;
 using Hypesoft.Application.DTOs;
 using Hypesoft.Domain.Entities;
 using Hypesoft.Domain.Repositories;
 
-namespace Hypesoft.Application.Handlers;
+namespace Hypesoft.Application.Handlers.Products;
 
 public class CreateProductHandler : IRequestHandler<CreateProductCommand, ProductDto>
 {

@@ -1,4 +1,4 @@
-using Hypesoft.Application.Commands;
+using Hypesoft.Application.Commands.Categories;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
