@@ -1,4 +1,5 @@
 using Hypesoft.Application.Commands.Categories;
+using Hypesoft.Application.Queries.Categories;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,5 +21,11 @@ public class CategoriesController : ControllerBase
     {
         var created = await _mediator.Send(command, ct);
         return Ok(created);
+    }
+    [HttpGet]
+    public async Task<IActionResult> GetAll(CancellationToken ct)
+    {
+        var result = await _mediator.Send(new ListCategoriesQuery(), ct);
+        return Ok(result);
     }
 }
