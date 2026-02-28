@@ -28,4 +28,14 @@ public class CategoriesController : ControllerBase
         var result = await _mediator.Send(new ListCategoriesQuery(), ct);
         return Ok(result);
     }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(string id, CancellationToken ct)
+    {
+        var result = await _mediator.Send(new GetCategoryByIdQuery(id), ct);
+        if (result is null)
+        {
+            return NotFound();
+        }
+        return Ok(result);
+    }
 }
