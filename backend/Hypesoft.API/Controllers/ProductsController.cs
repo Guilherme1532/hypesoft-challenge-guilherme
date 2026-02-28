@@ -48,4 +48,20 @@ public class ProductsController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(
+        string id,
+        [FromBody] UpdateProductCommand body,
+        CancellationToken ct)
+    {
+        var command = body with { Id = id };
+
+        var updated = await _mediator.Send(command, ct);
+
+        if (!updated)
+            return NotFound();
+
+        return NoContent();
+    }
 }
