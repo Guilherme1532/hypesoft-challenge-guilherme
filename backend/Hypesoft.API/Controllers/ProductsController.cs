@@ -1,4 +1,5 @@
 using Hypesoft.Application.Commands.Products;
+using Hypesoft.Application.Queries.Products;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,5 +21,20 @@ public class ProductsController : ControllerBase
     {
         var created = await _mediator.Send(command, ct);
         return Ok(created);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> List(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string? categoryId = null,
+        [FromQuery] string? search = null,
+        CancellationToken ct = default)
+    {
+        var result = await _mediator.Send(
+            new ListProductsQuery(page, pageSize, categoryId, search),
+            ct);
+
+        return Ok(result);
     }
 }
