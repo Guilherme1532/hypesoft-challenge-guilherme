@@ -19,4 +19,11 @@ public class Category
 
         Name = name.Trim();
     }
+
+    public static Category Rehydrate(string id, string name)
+    {
+        var category = new Category(name);
+        category.Id = id;
+        return category;
+    }
 }
