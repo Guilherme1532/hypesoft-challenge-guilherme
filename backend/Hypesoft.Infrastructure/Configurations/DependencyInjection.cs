@@ -29,6 +29,7 @@ public static class DependencyInjection
                 settings.DatabaseName);
         });
         services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
 
         return services;
     }
