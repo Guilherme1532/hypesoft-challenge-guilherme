@@ -49,4 +49,14 @@ public class CategoriesController : ControllerBase
         }
         return Ok();
     }
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(string id, CancellationToken ct)
+    {
+        var ok = await _mediator.Send(new DeleteCategoryCommand(id), ct);
+        if (!ok)
+        {
+            return NotFound();
+        }
+        return NoContent();
+    }
 }
