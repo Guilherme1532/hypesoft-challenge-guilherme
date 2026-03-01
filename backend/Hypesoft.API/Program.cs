@@ -1,6 +1,7 @@
 using Hypesoft.Infrastructure;
 using Hypesoft.Application;
 using Hypesoft.API.Middlewares;
+using Hypesoft.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
+builder.Services.AddApiRateLimiting();
 
 var app = builder.Build();
 
@@ -24,6 +26,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseApiRateLimiting();
 // app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
