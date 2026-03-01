@@ -1,5 +1,6 @@
 using Hypesoft.Application.Commands.Products;
 using Hypesoft.Application.Queries.Products;
+using Hypesoft.API.Requests.Products;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -84,5 +85,15 @@ public class ProductsController : ControllerBase
     {
         var result = await _mediator.Send(new ListLowStockProductsQuery(threshold, limit), ct);
         return Ok(result);
+    }
+    [HttpPatch("{id}/stock")]
+    public async Task<IActionResult> UpdateStock(string id, [FromBody] UpdateStockRequest body, CancellationToken ct)
+    {
+        var updated = await _mediator.Send(new UpdateProductStockCommand(id, body.StockQuantity), ct);
+
+        if (!updated)
+            return NotFound();
+
+        return NoContent();
     }
 }
