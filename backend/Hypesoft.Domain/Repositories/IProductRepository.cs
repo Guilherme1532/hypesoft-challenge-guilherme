@@ -18,6 +18,11 @@ public interface IProductRepository
         string? search = null,
         CancellationToken ct = default);
 
+    Task<IReadOnlyList<Product>> ListLowStockAsync(
+        int threshold,
+        int limit,
+        CancellationToken ct = default);
+
     Task CreateAsync(Product product, CancellationToken ct = default);
     Task UpdateAsync(Product product, CancellationToken ct = default);
     Task DeleteAsync(string id, CancellationToken ct = default);
