@@ -2,6 +2,7 @@ using FluentValidation;
 using Hypesoft.Application.Behaviors;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using AutoMapper;
 
 namespace Hypesoft.Application;
 
@@ -12,7 +13,9 @@ public static class DependencyInjection
         services.AddMediatR(cfg =>
             cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
+        services.AddAutoMapper(typeof(DependencyInjection).Assembly);
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
         return services;
     }
 }
