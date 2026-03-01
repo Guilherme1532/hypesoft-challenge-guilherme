@@ -94,6 +94,21 @@ public class ProductRepository : IProductRepository
         return await query.LongCountAsync(ct);
     }
 
+    public async Task<IReadOnlyList<Product>> ListLowStockAsync(int threshold, int limit, CancellationToken ct = default)
+    {
+        if (threshold < 0) threshold = 0;
+        if (limit <= 0) limit = 10;
+
+        var docs = await _db.Products.AsNoTracking()
+            .Where(p => p.StockQuantity < threshold)
+            .OrderBy(p => p.StockQuantity)
+            .Take(limit)
+            .ToListAsync(ct);
+
+        return docs
+            .Select(d => Product.Rehydrate(d.Id, d.Name, d.Description, d.Price, d.CategoryId, d.StockQuantity))
+            .ToList();
+    }
     public async Task UpdateAsync(Product product, CancellationToken ct = default)
     {
         var doc = await _db.Products.FirstOrDefaultAsync(x => x.Id == product.Id, ct);
