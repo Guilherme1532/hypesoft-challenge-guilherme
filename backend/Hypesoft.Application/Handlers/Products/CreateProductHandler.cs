@@ -1,18 +1,21 @@
-using MediatR;
 using Hypesoft.Application.Commands.Products;
 using Hypesoft.Application.DTOs;
 using Hypesoft.Domain.Entities;
 using Hypesoft.Domain.Repositories;
+using MediatR;
+using AutoMapper;
 
 namespace Hypesoft.Application.Handlers.Products;
 
 public class CreateProductHandler : IRequestHandler<CreateProductCommand, ProductDto>
 {
     private readonly IProductRepository _products;
+    private readonly IMapper _mapper;
 
-    public CreateProductHandler(IProductRepository products)
+    public CreateProductHandler(IProductRepository products, IMapper mapper)
     {
         _products = products;
+        _mapper = mapper;
     }
 
     public async Task<ProductDto> Handle(CreateProductCommand request, CancellationToken ct)
@@ -27,13 +30,6 @@ public class CreateProductHandler : IRequestHandler<CreateProductCommand, Produc
 
         await _products.CreateAsync(product, ct);
 
-        return new ProductDto(
-            product.Id,
-            product.Name,
-            product.Description,
-            product.Price,
-            product.CategoryId,
-            product.StockQuantity
-        );
+        return _mapper.Map<ProductDto>(product);
     }
 }

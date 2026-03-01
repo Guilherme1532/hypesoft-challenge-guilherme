@@ -2,6 +2,7 @@ using Hypesoft.Application.DTOs;
 using Hypesoft.Application.Queries.Products;
 using Hypesoft.Domain.Repositories;
 using MediatR;
+using AutoMapper;
 
 namespace Hypesoft.Application.Handlers.Products;
 
@@ -9,9 +10,12 @@ public class ListProductsHandler : IRequestHandler<ListProductsQuery, PagedResul
 {
     private readonly IProductRepository _products;
 
-    public ListProductsHandler(IProductRepository products)
+    private readonly IMapper _mapper;
+
+    public ListProductsHandler(IProductRepository products, IMapper mapper)
     {
         _products = products;
+        _mapper = mapper;
     }
 
     public async Task<PagedResult<ProductDto>> Handle(ListProductsQuery request, CancellationToken ct)
@@ -31,16 +35,7 @@ public class ListProductsHandler : IRequestHandler<ListProductsQuery, PagedResul
             request.Search,
             ct);
 
-        var dtoItems = items
-            .Select(p => new ProductDto(
-                p.Id,
-                p.Name,
-                p.Description,
-                p.Price,
-                p.CategoryId,
-                p.StockQuantity
-            ))
-            .ToList();
+        var dtoItems = _mapper.Map<List<ProductDto>>(items);
 
         return new PagedResult<ProductDto>(
             dtoItems,

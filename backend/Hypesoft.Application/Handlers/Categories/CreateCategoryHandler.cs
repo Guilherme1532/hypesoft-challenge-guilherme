@@ -1,18 +1,21 @@
-using MediatR;
 using Hypesoft.Application.Commands.Categories;
 using Hypesoft.Application.DTOs;
 using Hypesoft.Domain.Entities;
 using Hypesoft.Domain.Repositories;
+using MediatR;
+using AutoMapper;
 
 namespace Hypesoft.Application.Handlers.Categories;
 
 public class CreateCategoryHandler : IRequestHandler<CreateCategoryCommand, CategoryDto>
 {
     private readonly ICategoryRepository _categories;
+    private readonly IMapper _mapper;
 
-    public CreateCategoryHandler(ICategoryRepository categories)
+    public CreateCategoryHandler(ICategoryRepository categories, IMapper mapper)
     {
         _categories = categories;
+        _mapper = mapper;
     }
 
     public async Task<CategoryDto> Handle(CreateCategoryCommand request, CancellationToken ct)
@@ -21,6 +24,6 @@ public class CreateCategoryHandler : IRequestHandler<CreateCategoryCommand, Cate
 
         await _categories.CreateAsync(category, ct);
 
-        return new CategoryDto(category.Id, category.Name);
+         return _mapper.Map<CategoryDto>(category);
     }
 }
