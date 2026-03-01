@@ -2,9 +2,11 @@ using Hypesoft.Infrastructure;
 using Hypesoft.Application;
 using Hypesoft.API.Middlewares;
 using Hypesoft.API.Extensions;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddSerilogLogging();
 // Controllers + Swagger (template)
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -19,6 +21,7 @@ builder.Services.AddApiHealthChecks();
 
 var app = builder.Build();
 
+app.UseSerilogRequestLogging();
 // Swagger (template)
 if (app.Environment.IsDevelopment())
 {
