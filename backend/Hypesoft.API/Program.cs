@@ -15,6 +15,7 @@ builder.Services.AddApplication();
 
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 builder.Services.AddApiRateLimiting();
+builder.Services.AddApiHealthChecks();
 
 var app = builder.Build();
 
@@ -27,6 +28,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseApiRateLimiting();
+app.UseApiHealthChecks();
 // app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
