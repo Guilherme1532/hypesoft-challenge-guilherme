@@ -75,4 +75,14 @@ public class ProductsController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpGet("low-stock")]
+    public async Task<IActionResult> LowStock(
+        [FromQuery] int threshold = 10,
+        [FromQuery] int limit = 10,
+        CancellationToken ct = default)
+    {
+        var result = await _mediator.Send(new ListLowStockProductsQuery(threshold, limit), ct);
+        return Ok(result);
+    }
 }
