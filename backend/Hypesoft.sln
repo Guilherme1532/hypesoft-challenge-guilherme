@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypesoft.Infrastructure", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypesoft.API", "Hypesoft.API\Hypesoft.API.csproj", "{F008F300-CFB7-4AD9-AAE9-3321A379C572}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypesoft.Application.Tests", "Hypesoft.Application.Tests\Hypesoft.Application.Tests.csproj", "{4CC511C3-E1F2-4438-A0F2-9527B15BB230}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{F008F300-CFB7-4AD9-AAE9-3321A379C572}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F008F300-CFB7-4AD9-AAE9-3321A379C572}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F008F300-CFB7-4AD9-AAE9-3321A379C572}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CC511C3-E1F2-4438-A0F2-9527B15BB230}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CC511C3-E1F2-4438-A0F2-9527B15BB230}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CC511C3-E1F2-4438-A0F2-9527B15BB230}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CC511C3-E1F2-4438-A0F2-9527B15BB230}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
