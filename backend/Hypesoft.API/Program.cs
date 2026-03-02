@@ -7,10 +7,11 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddSerilogLogging();
+builder.Services.AddApiAuthentication(builder.Configuration);
+
 // Controllers + Swagger (template)
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddApiSwagger();
 
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
@@ -21,19 +22,14 @@ builder.Services.AddApiHealthChecks();
 
 var app = builder.Build();
 
+app.UseApiSwagger();
 app.UseSerilogRequestLogging();
-// Swagger (template)
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseApiRateLimiting();
 app.UseApiHealthChecks();
-// app.UseHttpsRedirection();
-app.UseAuthorization();
+
+app.UseApiAuthentication();
+
 app.MapControllers();
 
 app.Run();

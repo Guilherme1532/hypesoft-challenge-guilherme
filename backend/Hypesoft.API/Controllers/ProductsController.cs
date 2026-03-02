@@ -3,6 +3,7 @@ using Hypesoft.Application.Queries.Products;
 using Hypesoft.API.Requests.Products;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hypesoft.API.Controllers;
 
@@ -18,6 +19,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "ManagerOnly")]
     public async Task<IActionResult> Create(CreateProductCommand command, CancellationToken ct)
     {
         var created = await _mediator.Send(command, ct);
@@ -25,6 +27,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = "UserOnly")]
     public async Task<IActionResult> List(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
@@ -40,6 +43,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize(Policy = "UserOnly")]
     public async Task<IActionResult> GetById(string id, CancellationToken ct)
     {
         var result = await _mediator.Send(new GetProductByIdQuery(id), ct);
@@ -51,6 +55,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Policy = "ManagerOnly")]
     public async Task<IActionResult> Update(
         string id,
         [FromBody] UpdateProductCommand body,
@@ -67,6 +72,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Policy = "ManagerOnly")]
     public async Task<IActionResult> Delete(string id, CancellationToken ct)
     {
         var deleted = await _mediator.Send(new DeleteProductCommand(id), ct);
@@ -78,6 +84,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("low-stock")]
+    [Authorize(Policy = "UserOnly")]
     public async Task<IActionResult> LowStock(
         [FromQuery] int threshold = 10,
         [FromQuery] int limit = 10,
@@ -87,6 +94,7 @@ public class ProductsController : ControllerBase
         return Ok(result);
     }
     [HttpPatch("{id}/stock")]
+    [Authorize(Policy = "ManagerOnly")]
     public async Task<IActionResult> UpdateStock(string id, [FromBody] UpdateStockRequest body, CancellationToken ct)
     {
         var updated = await _mediator.Send(new UpdateProductStockCommand(id, body.StockQuantity), ct);
