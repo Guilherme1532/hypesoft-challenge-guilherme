@@ -1,6 +1,3 @@
-using Hypesoft.Infrastructure.Data;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-
 namespace Hypesoft.API.Extensions;
 
 public static class HealthChecksExtensions
@@ -15,7 +12,7 @@ public static class HealthChecksExtensions
 
     public static WebApplication UseApiHealthChecks(this WebApplication app)
     {
-        app.MapHealthChecks("/health");
+        app.MapHealthChecks("/health").AllowAnonymous();
         return app;
     }
 }
