@@ -32,3 +32,67 @@ export async function updateToken() {
   if (!keycloak.authenticated) return;
   await keycloak.updateToken(30);
 }
+
+export function getUserRoles(): string[] {
+  const parsed = keycloak.tokenParsed as
+    | {
+        roles?: string[] | string;
+        realm_access?: { roles?: string[] };
+      }
+    | undefined;
+
+  const directRoles =
+    typeof parsed?.roles === "string"
+      ? [parsed.roles]
+      : Array.isArray(parsed?.roles)
+        ? parsed.roles
+        : [];
+
+  const realmRoles = Array.isArray(parsed?.realm_access?.roles)
+    ? parsed.realm_access.roles
+    : [];
+
+  return Array.from(new Set([...directRoles, ...realmRoles]));
+}
+
+export function hasAnyRole(roles: string[]) {
+  const userRoles = getUserRoles();
+  return roles.some((role) => userRoles.includes(role));
+}
+
+export interface UserProfile {
+  displayName: string;
+  role: "admin" | "manager" | "user" | "unknown";
+}
+
+function normalizeRole(roles: string[]): UserProfile["role"] {
+  if (roles.includes("admin")) return "admin";
+  if (roles.includes("manager")) return "manager";
+  if (roles.includes("user")) return "user";
+  return "unknown";
+}
+
+export function getUserProfile(): UserProfile {
+  const parsed = keycloak.tokenParsed as
+    | {
+        preferred_username?: string;
+        name?: string;
+        given_name?: string;
+        family_name?: string;
+      }
+    | undefined;
+
+  const composedName =
+    [parsed?.given_name, parsed?.family_name].filter(Boolean).join(" ").trim() || undefined;
+
+  const displayName =
+    parsed?.name?.trim() ||
+    composedName ||
+    parsed?.preferred_username?.trim() ||
+    "Usuario";
+
+  return {
+    displayName,
+    role: normalizeRole(getUserRoles()),
+  };
+}
