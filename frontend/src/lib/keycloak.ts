@@ -1,7 +1,12 @@
 import Keycloak from "keycloak-js";
+import {
+  KEYCLOAK_CLIENT_ID,
+  KEYCLOAK_REALM,
+  KEYCLOAK_URL,
+} from "@/lib/env";
 
 export const keycloak = new Keycloak({
-  url: "http://localhost:8080",
-  realm: "hypesoft",
-  clientId: "frontend",
+  url: KEYCLOAK_URL,
+  realm: KEYCLOAK_REALM,
+  clientId: KEYCLOAK_CLIENT_ID,
 });

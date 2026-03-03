@@ -3,22 +3,39 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import App from "./App";
+import "./index.css";
 import { initAuth } from "@/services/auth";
+import ToastViewport from "@/components/layout/ToastViewport";
 
 const queryClient = new QueryClient();
+const rootElement = document.getElementById("root");
 
-async function bootstrap() {
-  await initAuth();
+if (!rootElement) {
+  throw new Error("Root element #root was not found.");
+}
+const rootContainer = rootElement;
 
-  ReactDOM.createRoot(document.getElementById("root")!).render(
+function renderApp() {
+  ReactDOM.createRoot(rootContainer).render(
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <App />
         </BrowserRouter>
+        <ToastViewport />
       </QueryClientProvider>
     </React.StrictMode>
   );
+}
+
+async function bootstrap() {
+  try {
+    await initAuth();
+  } catch (error) {
+    console.error("Keycloak initialization failed. Rendering app without SSO session.", error);
+  } finally {
+    renderApp();
+  }
 }
 
 bootstrap();
