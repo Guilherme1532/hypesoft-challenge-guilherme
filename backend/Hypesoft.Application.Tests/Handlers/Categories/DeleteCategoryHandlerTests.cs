@@ -39,7 +39,7 @@ public class DeleteCategoryHandlerTests
         var repo = new Mock<ICategoryRepository>();
 
         var command = new DeleteCategoryCommand("cat-1");
-        var existing = new Category("Eletrônicos"); // tanto faz, só precisa ser != null
+        var existing = new Category("Eletrônicos");
 
         repo.Setup(r => r.GetByIdAsync(command.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(existing);

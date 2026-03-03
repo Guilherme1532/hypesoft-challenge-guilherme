@@ -18,10 +18,7 @@ public class HypesoftDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Mapeia para collections do Mongo
         modelBuilder.Entity<ProductDocument>().ToCollection("products");
         modelBuilder.Entity<CategoryDocument>().ToCollection("categories");
-
-        // (opcional agora) índices — a gente faz depois
     }
 }

@@ -53,7 +53,7 @@ public class CategoryRepository : ICategoryRepository
             .FirstOrDefaultAsync(x => x.Id == category.Id, ct);
 
         if (doc is null)
-            return; // ou lançar NotFound
+            return;
 
         doc.Name = category.Name;
 

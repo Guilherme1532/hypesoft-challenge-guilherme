@@ -21,7 +21,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Controllers + Swagger (template)
 builder.Services.AddControllers();
 builder.Services.AddApiSwagger();
 
