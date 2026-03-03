@@ -24,7 +24,7 @@ export async function updateCategory(
   id: string,
   payload: UpdateCategoryPayload
 ) {
-  await apiClient.put(`/api/categories/${id}`, payload);
+  await apiClient.put(`/api/categories/${id}`, { id, ...payload });
 }
 
 export async function deleteCategory(id: string) {

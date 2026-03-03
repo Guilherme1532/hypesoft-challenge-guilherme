@@ -37,7 +37,7 @@ export async function createProduct(payload: CreateProductPayload) {
 }
 
 export async function updateProduct(id: string, payload: UpdateProductPayload) {
-  await apiClient.put(`/api/products/${id}`, payload);
+  await apiClient.put(`/api/products/${id}`, { id, ...payload });
 }
 
 export async function deleteProduct(id: string) {
