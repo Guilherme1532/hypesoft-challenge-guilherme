@@ -102,6 +102,14 @@ docker compose up -d --build
 - Keycloak: http://localhost:8080
 - Mongo Express: http://localhost:8081
 
+## Demonstracao
+
+- A validacao funcional completa pode ser feita seguindo:
+  - `docs/DEMO_GUIDE.md`
+- Observacao: por restricao de tempo, a entrega esta acompanhada de guia detalhado de execucao e validacao em vez de video.
+- Decisoes tecnicas resumidas:
+  - `docs/DECISIONS.md`
+
 ## Keycloak (Import Automatico)
 
 O projeto importa automaticamente o realm em:
