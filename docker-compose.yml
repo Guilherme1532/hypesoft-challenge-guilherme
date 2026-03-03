@@ -76,7 +76,7 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:22.0
     container_name: hypesoft-keycloak
-    command: start-dev
+    command: start-dev --import-realm
     ports:
       - "8080:8080"
     environment:
@@ -85,6 +85,7 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
     volumes:
       - keycloak_data:/opt/keycloak/data
+      - ./infra/keycloak:/opt/keycloak/data/import
     restart: unless-stopped
 
 volumes:

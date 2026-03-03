@@ -1,0 +1,97 @@
+{
+  "realm": "hypesoft",
+  "enabled": true,
+  "displayName": "Hypesoft",
+  "registrationAllowed": false,
+  "resetPasswordAllowed": true,
+  "rememberMe": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "user",
+        "description": "Basic application user"
+      },
+      {
+        "name": "manager",
+        "description": "Manager privileges"
+      },
+      {
+        "name": "admin",
+        "description": "Administrator privileges"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "frontend",
+      "name": "Hypesoft Frontend",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [
+        "http://localhost:3000/*"
+      ],
+      "webOrigins": [
+        "http://localhost:3000"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "app_user",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "App",
+      "lastName": "User",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Pass@123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "user"
+      ]
+    },
+    {
+      "username": "app_manager",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "App",
+      "lastName": "Manager",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Pass@123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "manager"
+      ]
+    },
+    {
+      "username": "app_admin",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "App",
+      "lastName": "Admin",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Pass@123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "admin"
+      ]
+    }
+  ]
+}
