@@ -59,11 +59,6 @@ export default function ProductsPage() {
     return () => clearTimeout(timer);
   }, [searchInput]);
 
-  useEffect(() => {
-    const availableIds = new Set(data?.items.map((product) => product.id) ?? []);
-    setSelectedProductIds((current) => current.filter((id) => availableIds.has(id)));
-  }, [data?.items]);
-
   const totalPages = useMemo(() => {
     if (!data?.total) return 1;
     return Math.max(1, Math.ceil(data.total / data.pageSize));
@@ -72,6 +67,14 @@ export default function ProductsPage() {
   const categoryMap = useMemo(
     () => new Map(categories?.map((category) => [category.id, category.name]) ?? []),
     [categories]
+  );
+  const currentPageProductIds = useMemo(
+    () => data?.items.map((product) => product.id) ?? [],
+    [data?.items]
+  );
+  const selectedCurrentPageIds = useMemo(
+    () => selectedProductIds.filter((id) => currentPageProductIds.includes(id)),
+    [selectedProductIds, currentPageProductIds]
   );
 
   async function confirmDelete() {
@@ -138,14 +141,14 @@ export default function ProductsPage() {
       return;
     }
 
-    if (!selectedProductIds.length) {
+    if (!selectedCurrentPageIds.length) {
       toast.error("Nenhum produto selecionado", "Selecione ao menos um produto para atualizar.");
       return;
     }
 
     try {
       await Promise.all(
-        selectedProductIds.map((id) =>
+        selectedCurrentPageIds.map((id) =>
           updateStockMutation.mutateAsync({
             id,
             payload: { stockQuantity: parsedValue },
@@ -155,7 +158,7 @@ export default function ProductsPage() {
       await refetch();
       toast.success(
         "Estoque em lote atualizado",
-        `${selectedProductIds.length} produto(s) atualizado(s) para ${parsedValue}.`
+        `${selectedCurrentPageIds.length} produto(s) atualizado(s) para ${parsedValue}.`
       );
       setSelectedProductIds([]);
       setBulkStockInput("");
@@ -165,8 +168,8 @@ export default function ProductsPage() {
   }
 
   const allCurrentPageSelected =
-    Boolean(data?.items.length) &&
-    data!.items.every((product) => selectedProductIds.includes(product.id));
+    Boolean(currentPageProductIds.length) &&
+    currentPageProductIds.every((id) => selectedProductIds.includes(id));
 
   return (
     <AppShell
@@ -253,11 +256,11 @@ export default function ProductsPage() {
                 />
                 <Button
                   variant="outline"
-                  disabled={!selectedProductIds.length || updateStockMutation.isPending}
+                  disabled={!selectedCurrentPageIds.length || updateStockMutation.isPending}
                   onClick={() => void applyBulkStockUpdate()}
                 >
                   <PackageCheck />
-                  Atualizar lote ({selectedProductIds.length})
+                  Atualizar lote ({selectedCurrentPageIds.length})
                 </Button>
               </>
             )}
