@@ -8,6 +8,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddSerilogLogging();
 builder.Services.AddApiAuthentication(builder.Configuration);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", policy =>
+    {
+        var origins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+            ?? ["http://localhost:3000"];
+
+        policy.WithOrigins(origins)
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 // Controllers + Swagger (template)
 builder.Services.AddControllers();
@@ -27,6 +39,7 @@ app.UseSerilogRequestLogging();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseApiRateLimiting();
 app.UseApiHealthChecks();
+app.UseCors("Frontend");
 
 app.UseApiAuthentication();
 

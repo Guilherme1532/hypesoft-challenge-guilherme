@@ -1,4 +1,43 @@
 services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: hypesoft-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      MongoDbSettings__ConnectionString: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@mongodb:27017/?authSource=admin
+      MongoDbSettings__DatabaseName: hypesoft
+      Keycloak__Authority: http://keycloak:8080/realms/hypesoft
+      Keycloak__Audience: frontend
+      Keycloak__ValidateIssuer: "false"
+      Cors__AllowedOrigins__0: http://localhost:3000
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: hypesoft-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      VITE_API_BASE_URL: http://localhost:5000
+      VITE_KEYCLOAK_URL: http://localhost:8080
+      VITE_KEYCLOAK_REALM: hypesoft
+      VITE_KEYCLOAK_CLIENT_ID: frontend
+    depends_on:
+      backend:
+        condition: service_started
+
   mongodb:
     image: mongo:6
     container_name: hypesoft-mongodb

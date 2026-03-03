@@ -15,10 +15,12 @@ public static class AuthExtensions
         {
             options.Authority = configuration["Keycloak:Authority"];
             options.RequireHttpsMetadata = false;
+            var validateIssuer = configuration.GetValue("Keycloak:ValidateIssuer", true);
 
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateAudience = false,
+                ValidateIssuer = validateIssuer,
                 RoleClaimType = ClaimTypes.Role, // o ASP.NET casa RequireRole aqui
                 NameClaimType = "preferred_username"
             };
