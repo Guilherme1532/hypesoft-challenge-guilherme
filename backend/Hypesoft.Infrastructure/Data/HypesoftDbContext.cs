@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MongoDB.EntityFrameworkCore.Extensions;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Hypesoft.Infrastructure.Data;
 
@@ -7,6 +8,7 @@ public class HypesoftDbContext : DbContext
 {
     public HypesoftDbContext(DbContextOptions<HypesoftDbContext> options) : base(options)
     {
+        Database.AutoTransactionBehavior = AutoTransactionBehavior.Never;
     }
 
     public DbSet<ProductDocument> Products => Set<ProductDocument>();
