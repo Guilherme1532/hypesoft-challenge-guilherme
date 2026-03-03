@@ -5,6 +5,7 @@ import ProductsPage from "@/pages/ProductsPage";
 import ProductFormPage from "@/pages/ProductFormPage";
 import CategoriesPage from "@/pages/CategoriesPage";
 import UnauthorizedPage from "@/pages/UnauthorizedPage";
+import SettingsPage from "@/pages/SettingsPage";
 import RequireAuth from "@/components/layout/RequireAuth";
 import RequireRole from "@/components/layout/RequireRole";
 
@@ -60,6 +61,16 @@ export default function App() {
           <RequireAuth>
             <RequireRole roles={["user", "manager", "admin"]}>
               <CategoriesPage />
+            </RequireRole>
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <RequireAuth>
+            <RequireRole roles={["user", "manager", "admin"]}>
+              <SettingsPage />
             </RequireRole>
           </RequireAuth>
         }

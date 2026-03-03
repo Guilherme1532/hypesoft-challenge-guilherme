@@ -11,8 +11,9 @@ import {
 } from "lucide-react";
 import { getUserProfile, logout } from "@/services/auth";
 import { Button } from "@/components/ui/button";
+import { usePreferencesStore } from "@/stores/preferences-store";
 
-type NavKey = "dashboard" | "products" | "categories";
+type NavKey = "dashboard" | "products" | "categories" | "settings";
 
 interface AppShellProps {
   activeNav: NavKey;
@@ -29,6 +30,7 @@ const navItems: Array<{ key: NavKey; label: string; href: string; icon: React.Co
 
 export default function AppShell({ activeNav, title, subtitle, children }: AppShellProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const density = usePreferencesStore((state) => state.density);
   const user = getUserProfile();
   const initials = user.displayName
     .split(" ")
@@ -58,13 +60,13 @@ export default function AppShell({ activeNav, title, subtitle, children }: AppSh
             <LayoutDashboard className="size-5" />
           </div>
           <div>
-            <p className="text-xl font-semibold text-zinc-900">Storage</p>
-            <p className="text-xs text-zinc-500">Controle de estoque</p>
+            <p className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">Storage</p>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">Controle de estoque</p>
           </div>
         </div>
 
         <div className="space-y-2 sm:space-y-3">
-          <p className="px-3 text-xs font-medium tracking-[0.2em] text-zinc-400">GENERAL</p>
+          <p className="px-3 text-xs font-medium tracking-[0.2em] text-zinc-400 dark:text-zinc-500">GENERAL</p>
           <div
             className={
               mobile
@@ -81,8 +83,8 @@ export default function AppShell({ activeNav, title, subtitle, children }: AppSh
                   mobile ? "w-full" : "shrink-0 whitespace-nowrap lg:w-full"
                 } ${
                   activeNav === item.key
-                    ? "bg-zinc-900 text-white shadow-sm"
-                    : "text-zinc-700 hover:bg-zinc-200/70"
+                    ? "bg-zinc-900 text-white shadow-sm dark:bg-zinc-100 dark:text-zinc-900"
+                    : "text-zinc-700 hover:bg-zinc-200/70 dark:text-zinc-200 dark:hover:bg-zinc-800"
                 }`}
               >
                 <item.icon className="size-4" />
@@ -93,21 +95,26 @@ export default function AppShell({ activeNav, title, subtitle, children }: AppSh
         </div>
 
         <div className={`mt-6 space-y-3 ${mobile ? "block" : "hidden lg:block"}`}>
-          <p className="px-3 text-xs font-medium tracking-[0.2em] text-zinc-400">SUPPORT</p>
-          <button
-            type="button"
-            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-zinc-700 transition hover:bg-zinc-200/70"
+          <p className="px-3 text-xs font-medium tracking-[0.2em] text-zinc-400 dark:text-zinc-500">SUPPORT</p>
+          <Link
+            to="/settings"
+            onClick={mobile ? closeMobileMenu : undefined}
+            className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition ${
+              activeNav === "settings"
+                ? "bg-zinc-900 text-white shadow-sm dark:bg-zinc-100 dark:text-zinc-900"
+                : "text-zinc-700 hover:bg-zinc-200/70 dark:text-zinc-200 dark:hover:bg-zinc-800"
+            }`}
           >
             <Settings className="size-4" />
             Configuracoes
-          </button>
+          </Link>
           <button
             type="button"
             onClick={() => {
               if (mobile) closeMobileMenu();
               logout();
             }}
-            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-zinc-700 transition hover:bg-zinc-200/70"
+            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-zinc-700 transition hover:bg-zinc-200/70 dark:text-zinc-200 dark:hover:bg-zinc-800"
           >
             <LogOut className="size-4" />
             Sair
@@ -118,43 +125,47 @@ export default function AppShell({ activeNav, title, subtitle, children }: AppSh
   }
 
   return (
-    <div className="min-h-screen bg-[#d7dbea] p-2 sm:p-4 md:p-6 lg:p-8">
-      <main className="mx-auto w-full max-w-375 overflow-hidden rounded-2xl border border-white/70 bg-white shadow-2xl sm:rounded-3xl">
+    <div className="min-h-screen bg-[#d7dbea] p-2 dark:bg-zinc-950 sm:p-4 md:p-6 lg:p-8">
+      <main className="mx-auto w-full max-w-375 overflow-hidden rounded-2xl border border-white/70 bg-white shadow-2xl dark:border-zinc-800 dark:bg-zinc-900 sm:rounded-3xl">
         <div className="grid min-h-215 lg:grid-cols-[280px_1fr]">
-          <aside className="hidden border-r border-zinc-100 bg-zinc-50 p-4 sm:p-5 lg:block">
+          <aside className="hidden border-r border-zinc-100 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900 sm:p-5 lg:block">
             {renderSidebarContent()}
           </aside>
 
-          <div className="bg-zinc-50/60">
-            <header className="border-b border-zinc-100 bg-white px-5 py-4 lg:px-7">
+          <div className="bg-zinc-50/60 dark:bg-zinc-950">
+            <header className="border-b border-zinc-100 bg-white px-5 py-4 dark:border-zinc-800 dark:bg-zinc-900 lg:px-7">
               <div className="flex items-center justify-between gap-3 lg:justify-end">
                 <Button
                   variant="outline"
                   size="icon-sm"
-                  className="rounded-xl lg:hidden"
+                  className="rounded-xl border-zinc-300 bg-white text-zinc-900 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700 lg:hidden"
                   onClick={() => setMobileMenuOpen(true)}
                 >
                   <Menu />
                 </Button>
-                <div className="flex items-center justify-between gap-2 rounded-2xl border border-zinc-200 bg-zinc-50 px-2.5 py-2 sm:w-auto sm:justify-start sm:gap-3 sm:px-3">
+                <div className="flex items-center justify-between gap-2 rounded-2xl border border-zinc-200 bg-zinc-50 px-2.5 py-2 dark:border-zinc-700 dark:bg-zinc-800 sm:w-auto sm:justify-start sm:gap-3 sm:px-3">
                   <div className="flex size-9 items-center justify-center rounded-xl bg-linear-to-br from-indigo-600 to-violet-500 text-xs font-semibold text-white sm:size-10 sm:text-sm">
                     {initials}
                   </div>
                   <div className="min-w-0">
-                    <p className="max-w-30 truncate text-xs font-semibold text-zinc-900 sm:max-w-none sm:text-sm">
+                    <p className="max-w-30 truncate text-xs font-semibold text-zinc-900 dark:text-zinc-100 sm:max-w-none sm:text-sm">
                       {user.displayName}
                     </p>
-                    <p className="text-[11px] text-zinc-500 sm:text-xs">Storage {roleLabel}</p>
+                    <p className="text-[11px] text-zinc-500 dark:text-zinc-400 sm:text-xs">Storage {roleLabel}</p>
                   </div>
                 </div>
               </div>
             </header>
 
-            <section className="space-y-4 p-3 sm:space-y-5 sm:p-5 lg:p-7">
+            <section
+                  className={`p-3 sm:p-5 lg:p-7 ${
+                density === "compact" ? "space-y-3 sm:space-y-4" : "space-y-4 sm:space-y-5"
+              }`}
+            >
               <div className="flex items-end justify-between">
                 <div>
-                  <h1 className="text-2xl font-semibold text-zinc-900 sm:text-3xl">{title}</h1>
-                  <p className="text-sm text-zinc-500">{subtitle}</p>
+                  <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100 sm:text-3xl">{title}</h1>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">{subtitle}</p>
                 </div>
               </div>
               {children}
@@ -171,9 +182,9 @@ export default function AppShell({ activeNav, title, subtitle, children }: AppSh
             onClick={closeMobileMenu}
             aria-label="Fechar menu"
           />
-          <aside className="relative z-10 h-full w-[86%] max-w-[320px] border-r border-zinc-200 bg-zinc-50 p-4 shadow-xl">
+          <aside className="relative z-10 h-full w-[86%] max-w-[320px] border-r border-zinc-200 bg-zinc-50 p-4 shadow-xl dark:border-zinc-800 dark:bg-zinc-900">
             <div className="mb-4 flex items-center justify-between">
-              <p className="text-sm font-medium text-zinc-600">Menu</p>
+              <p className="text-sm font-medium text-zinc-600 dark:text-zinc-300">Menu</p>
               <Button variant="outline" size="icon-sm" className="rounded-xl" onClick={closeMobileMenu}>
                 <X />
               </Button>

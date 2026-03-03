@@ -65,6 +65,14 @@ export interface UserProfile {
   role: "admin" | "manager" | "user" | "unknown";
 }
 
+export interface UserAccountDetails {
+  displayName: string;
+  username: string;
+  email: string;
+  role: UserProfile["role"];
+  roles: string[];
+}
+
 function normalizeRole(roles: string[]): UserProfile["role"] {
   if (roles.includes("admin")) return "admin";
   if (roles.includes("manager")) return "manager";
@@ -95,4 +103,28 @@ export function getUserProfile(): UserProfile {
     displayName,
     role: normalizeRole(getUserRoles()),
   };
+}
+
+export function getUserAccountDetails(): UserAccountDetails {
+  const profile = getUserProfile();
+  const roles = getUserRoles();
+  const parsed = keycloak.tokenParsed as
+    | {
+        preferred_username?: string;
+        email?: string;
+      }
+    | undefined;
+
+  return {
+    displayName: profile.displayName,
+    username: parsed?.preferred_username?.trim() || "usuario",
+    email: parsed?.email?.trim() || "email-nao-disponivel",
+    role: profile.role,
+    roles,
+  };
+}
+
+export function openAccountManagement() {
+  const redirectUri = `${window.location.origin}/settings`;
+  window.location.href = keycloak.createAccountUrl({ redirectUri });
 }

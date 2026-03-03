@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import App from "./App";
 import "./index.css";
 import { initAuth } from "@/services/auth";
+import PreferencesSync from "@/components/layout/PreferencesSync";
 import ToastViewport from "@/components/layout/ToastViewport";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ function renderApp() {
         <BrowserRouter>
           <App />
         </BrowserRouter>
+        <PreferencesSync />
         <ToastViewport />
       </QueryClientProvider>
     </React.StrictMode>
