@@ -33,6 +33,7 @@ builder.Services.AddApiRateLimiting();
 builder.Services.AddApiHealthChecks();
 
 var app = builder.Build();
+await app.SeedDatabaseAsync();
 
 app.UseApiSwagger();
 app.UseSerilogRequestLogging();
